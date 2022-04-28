@@ -1,58 +1,45 @@
 package br.com.chronosAcademy.automacaoWeb;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import br.com.chronosAcademy.core.Driver;
+import br.com.chronosAcademy.pages.CursoPage;
+import br.com.chronosAcademy.pages.PrincipalPage;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class testeWeb {
+       WebDriver driver;  // cria um objeto que será o driver. Criado com o nome driver
+       Driver driverWeb;  //objeto do tipo driver que referencia a classe Driver
+       PrincipalPage principalPage; //cria um objeto p/ instanciar o método que está na outra classe
+       CursoPage cursoPage;
 
-    WebDriver driver;  // cria um objeto que será o driver. Criado com o nome driver.
     @Before
     public void inicializaTeste(){
-        WebDriverManager.chromedriver().setup();  //Configura o ambiente como versão, etc
-        driver = new ChromeDriver();  // Instaciando o objeto para ser usado. Abre o navegador
-        driver.manage().window().maximize(); // Maximiza a tela do Navegador
-
+        driverWeb = new Driver("chrome");  // Instanciando o objeto
+        driver = driverWeb.getDriver();
         driver.get("https://www.chronosacademy.com.br");  //Abre a página da URL informada
-
+        principalPage = new PrincipalPage(driver); // Instancia o objeto no @before porque será usado em todos os testes
     }
 
     @Test
     public void primeiroTeste(){  //Criação do Método
-
-         String xpathTitulo = "//section[2]//h4";
-          //"/html/body/div/div/div/div/div/section[2]/div[3]/div/div/div/div/div[1]/div/h4"; Caminho antes da redução
-          // cria o objeto xpathTitulo com o caminho do título da página
-
-        WebElement txtTitulo = driver.findElement(By.xpath(xpathTitulo)); //Objeto que localiza o elemento
-        String titulo = txtTitulo.getText(); //Objeto que recebe o valor vindo do valor do elemento
-        assertEquals("Porque Tempo É Conhecimento", titulo); //Valida o texto com o valor encontrado
+       assertEquals("Porque Tempo É Conhecimento", principalPage.getTitulo()); //Valida o texto com o valor encontrado
     }
 
-/*
-@Test
+    @Test
     public void segundoTeste(){
-
-        String xpathBotao = "/html/body/div/div/div/div/div/section[2]/div[3]/div/div/div/div/div[2]/div/div/a";
-        WebElement txtBotao = driver.findElement(By.xpath(xpathBotao)); //Localiza o botão
-        txtBotao.click();  // Clica no botão
-
-        String xpathTitulo2 = "/html/body/div/div/div/div/div/section[2]/div[3]/div/div/div/div/div[2]/div/div/a";  // Cria objeto com o caminho do título da pagina seguinte
-        WebElement txtTitulo2 = driver.findElement(By.linkText(xpathBotao)); //Localiza titulo pagina seguinte
-        assertEquals("Conheça todos os nossos cursos", txtTitulo2);
-
+        cursoPage = new CursoPage(driver);  // Instancia o objeto apenas no método onde será usado
+        principalPage.clickBotao();
+        assertEquals("Conheça todos os nossos cursos", cursoPage.getTitulo2());
     }
 
- */
-@After
+    @After
     public void finalizaTeste(){
     driver.quit(); // Fecha o browser e finaliza o driver
 }
