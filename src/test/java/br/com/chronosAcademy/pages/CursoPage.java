@@ -1,19 +1,21 @@
 package br.com.chronosAcademy.pages;
 
+import br.com.chronosAcademy.maps.CursoMap;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
 
 public class CursoPage {
     WebDriver driver;
+    CursoMap cursoMap; //criação do objeto do tipo CursoMap
 
     public CursoPage(WebDriver driver) {
         this.driver = driver;
+        cursoMap = new CursoMap(); // inicializa o objeto cursoMap
+        PageFactory.initElements(driver,cursoMap); //inicializa os elementos
     }
     public String getTitulo2() {
-        String cssTitulo = "div.text-center > div.large-h1";  // Cria objeto com o caminho CSS do título da pagina seguinte
-        WebElement txtTitulo = driver.findElement(By.cssSelector(cssTitulo)); //Localiza titulo pagina seguinte
-        String titulo = txtTitulo.getText();
-        return titulo;
+       return   cursoMap.txtTitulo.getText();
     }
 }
